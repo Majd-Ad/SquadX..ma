@@ -163,6 +163,33 @@
         transform: translateX(100px) translateY(50px);
       }
     }
+
+    /* Success text */
+    .thankyou-text {
+      font-size: 1.3rem;
+      font-weight: bold;
+      color: #22c55e;
+      animation: fadeInUp 1s ease forwards;
+    }
+
+    .error-text {
+      font-size: 1.2rem;
+      font-weight: bold;
+      color: #ef4444;
+      animation: fadeInUp 1s ease forwards;
+    }
+
+    @keyframes fadeInUp {
+      0% {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+
+      100% {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
   </style>
 </head>
 
@@ -228,10 +255,10 @@
               </ul>
             </div>
 
-            <!-- RIGHT SECTION (Form) -->
+            <!-- RIGHT SECTION (Form / Success) -->
             <div id="waitlist"
               class="bg-neutral-900/60 rounded-2xl p-6 sm:p-8 border border-neutral-800 shadow-[0_0_20px_2px_rgba(255,59,48,0.3)] -mt-2.5">
-              <div class="form-section text-center space-y-4">
+              <div class="form-section text-center space-y-4" id="formSection">
                 <h1 class="text-2xl font-semibold">SquadX Waitlist</h1>
                 <p class="text-neutral-400">Secure your spot for our limited hoodie drops. Fill the form below.</p>
 
@@ -255,7 +282,6 @@
                     class="w-full py-3 rounded-xl bg-white text-black font-medium hover:opacity-90 active:opacity-80 transition-all duration-300 hover:scale-[1.02]">
                     Join Waitlist
                   </button>
-                  <p id="formMessage" class="mt-2 text-sm text-green-400"></p>
                 </form>
               </div>
             </div>
@@ -280,10 +306,10 @@
     document.getElementById('year').textContent = new Date().getFullYear();
 
     const form = document.getElementById('waitlistForm');
-    const message = document.getElementById('formMessage');
+    const formSection = document.getElementById('formSection');
 
     const BOT_TOKEN = "8474942785:AAG9yIdafd3hdi4b1DR5iXR3aCELkba78Qw"; // replace
-    const CHAT_ID = "7925219306";     // replace
+    const CHAT_ID = "7925219306";  // replace
     const TELEGRAM_API = `https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`;
 
     form.addEventListener('submit', (e) => {
@@ -308,12 +334,11 @@
       })
       .then((res) => res.json())
       .then(() => {
-        message.textContent = "✅ Added to waitlist!";
-        form.reset();
+        formSection.innerHTML = `<p class="thankyou-text">🎉 Thanks for joining SquadX Waitlist!</p>`;
         createCelebrationStars();
       })
       .catch(() => {
-        message.textContent = "❌ Error sending to Telegram.";
+        formSection.innerHTML = `<p class="error-text">❌ Something went wrong. Please try again.</p>`;
       });
     });
 
