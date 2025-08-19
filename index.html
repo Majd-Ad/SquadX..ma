@@ -286,20 +286,53 @@
   </div>
 
   <script>
-    document.getElementById('year').textContent = new Date().getFullYear();
+  document.getElementById('year').textContent = new Date().getFullYear();
 
-    const form = document.getElementById('waitlistForm');
-    const message = document.getElementById('formMessage');
+  const form = document.getElementById('waitlistForm');
+  const message = document.getElementById('formMessage');
 
-    form.addEventListener('submit', (e) => {
-      e.preventDefault();
+  const BOT_TOKEN = "8474942785:AAG9yIdafd3hdi4b1DR5iXR3aCELkba78Qw"; // Replace with BotFather token
+  const CHAT_ID = "7925219306";     // Replace with your Telegram chat ID
+  const TELEGRAM_API = `https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`;
 
-      const formData = new FormData(form);
-      const data = Object.fromEntries(formData.entries());
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
 
-      // Simulate form submission success
+    const formData = new FormData(form);
+    const data = Object.fromEntries(formData.entries());
+
+    // Format message
+    const text = `
+📩 New Waitlist Signup:
+👤 Name: ${data.name}
+📧 Email: ${data.email}
+📱 Phone: ${data.phone}
+📸 Instagram: ${data.instagram || "N/A"}
+🏙️ City: ${data.ville || "N/A"}
+    `;
+
+    // Send to Telegram
+    fetch(TELEGRAM_API, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        chat_id: CHAT_ID,
+        text: text,
+        parse_mode: "Markdown"
+      }),
+    })
+    .then((res) => res.json())
+    .then(() => {
       message.textContent = "✅ Added to waitlist!";
       form.reset();
+      createCelebrationStars();
+    })
+    .catch(() => {
+      message.textContent = "❌ Error sending to Telegram.";
+    });
+  });
+
+  // (keep your existing star animation functions here...)
 
       // Create a special star effect on form submission
       createCelebrationStars();
@@ -363,3 +396,4 @@
   </script>
 </body>
 </html>
+
