@@ -284,15 +284,14 @@
       </div>
     </footer>
   </div>
-
-  <script>
+<script>
   document.getElementById('year').textContent = new Date().getFullYear();
 
   const form = document.getElementById('waitlistForm');
   const message = document.getElementById('formMessage');
 
   const BOT_TOKEN = "8474942785:AAG9yIdafd3hdi4b1DR5iXR3aCELkba78Qw"; // Replace with BotFather token
-  const CHAT_ID = "7925219306";     // Replace with your Telegram chat ID
+  const CHAT_ID = "7925219306"; // Replace with your Telegram chat ID
   const TELEGRAM_API = `https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`;
 
   form.addEventListener('submit', (e) => {
@@ -325,75 +324,65 @@
     .then(() => {
       message.textContent = "✅ Added to waitlist!";
       form.reset();
-      createCelebrationStars();
+      createCelebrationStars(); // ✅ call here only
     })
     .catch(() => {
       message.textContent = "❌ Error sending to Telegram.";
     });
   });
 
-  // (keep your existing star animation functions here...)
+  // --- Star animation script ---
+  function createStar() {
+    const star = document.createElement('div');
+    star.classList.add('star');
 
-      // Create a special star effect on form submission
-      createCelebrationStars();
-    });
+    const size = Math.floor(Math.random() * 6) + 4;
+    star.style.width = `${size}px`;
+    star.style.height = `${size}px`;
 
-    // Star animation script
-    function createStar() {
-      const star = document.createElement('div');
-      star.classList.add('star');
+    const xPos = Math.random() * 100;
+    const yPos = Math.random() * 100;
+    star.style.left = `${xPos}vw`;
+    star.style.top = `${yPos}vh`;
 
-      // Random size between 4 and 10px
-      const size = Math.floor(Math.random() * 6) + 4;
-      star.style.width = `${size}px`;
-      star.style.height = `${size}px`;
+    const animations = ['float', 'pulse', 'drift'];
+    const randomAnimation = animations[Math.floor(Math.random() * animations.length)];
+    const duration = Math.random() * 15 + 10;
 
-      // Random position
-      const xPos = Math.random() * 100;
-      const yPos = Math.random() * 100;
-      star.style.left = `${xPos}vw`;
-      star.style.top = `${yPos}vh`;
+    star.style.animation = `${randomAnimation} ${duration}s infinite`;
 
-      // Random animation
-      const animations = ['float', 'pulse', 'drift'];
-      const randomAnimation = animations[Math.floor(Math.random() * animations.length)];
-      const duration = Math.random() * 15 + 10; // 10-25 seconds
+    document.getElementById('starContainer').appendChild(star);
+    return star;
+  }
 
-      star.style.animation = `${randomAnimation} ${duration}s infinite`;
+  function createCelebrationStars() {
+    for (let i = 0; i < 20; i++) {
+      setTimeout(() => {
+        const star = createStar();
+        star.style.animation = 'pulse 1.5s infinite';
+        star.style.opacity = '0.9';
 
-      document.getElementById('starContainer').appendChild(star);
-      return star;
+        star.style.left = `${50 + (Math.random() * 30 - 15)}vw`;
+        star.style.top = `${50 + (Math.random() * 30 - 15)}vh`;
+      }, i * 100);
     }
+  }
 
-    // Create celebration stars on form submission
-    function createCelebrationStars() {
-      for (let i = 0; i < 20; i++) {
-        setTimeout(() => {
-          const star = createStar();
-          star.style.animation = 'pulse 1.5s infinite';
-          star.style.opacity = '0.9';
-
-          // Position around the form
-          star.style.left = `${50 + (Math.random() * 30 - 15)}vw`;
-          star.style.top = `${50 + (Math.random() * 30 - 15)}vh`;
-        }, i * 100);
-      }
+  function createPersistentStars() {
+    for (let i = 0; i < 25; i++) {
+      createStar();
     }
-
-    // Create persistent stars
-    function createPersistentStars() {
-      for (let i = 0; i < 25; i++) {
+    setInterval(() => {
+      if (document.getElementById('starContainer').childNodes.length < 40) {
         createStar();
       }
-      setInterval(() => {
-        if (document.getElementById('starContainer').childNodes.length < 40) {
-          createStar();
-        }
-      }, 3000);
-    }
+    }, 3000);
+  }
 
-    window.addEventListener('load', createPersistentStars);
-  </script>
+  window.addEventListener('load', createPersistentStars);
+</script>
+
 </body>
 </html>
+
 
