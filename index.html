@@ -33,7 +33,7 @@
       width: 12rem;
       height: 16rem;
       position: relative;
-      margin: 0 auto; /* center on all screens */
+      margin: 0 auto;
       z-index: 0;
     }
 
@@ -190,12 +190,12 @@
         </div>
         <div class="max-w-6xl mx-auto px-4 sm:px-6 py-12 md:py-20">
           <div class="grid md:grid-cols-2 gap-10 items-center">
-            
-            <!-- LEFT SECTION (Hoodie + Text) -->
+
+            <!-- LEFT SECTION -->
             <div class="flex flex-col items-center text-center md:text-left md:items-start">
               <p class="uppercase text-xs tracking-[0.3em] text-neutral-400">Limited streetwear drops</p>
-              
-              <!-- Hoodie Animation Centered -->
+
+              <!-- Hoodie Animation -->
               <div class="mt-6">
                 <div class="perspective w-48 h-64">
                   <div class="card">
@@ -211,8 +211,7 @@
 
               <h1 class="mt-6 text-3xl sm:text-4xl md:text-5xl font-black leading-tight">
                 Get early access to the
-                <span
-                  class="inline-block -skew-x-6 bg-gradient-to-r from-white to-red-600 bg-clip-text text-transparent">SquadX</span>
+                <span class="inline-block -skew-x-6 bg-gradient-to-r from-white to-red-600 bg-clip-text text-transparent">SquadX</span>
                 waitlist
               </h1>
               <p class="mt-4 text-neutral-300 max-w-prose">
@@ -258,7 +257,6 @@
                   </button>
                   <p id="formMessage" class="mt-2 text-sm text-green-400"></p>
                 </form>
-
               </div>
             </div>
           </div>
@@ -267,122 +265,102 @@
     </main>
 
     <footer class="border-t border-neutral-900 relative z-30">
-      <div
-        class="max-w-6xl mx-auto px-4 sm:px-6 py-10 flex flex-col sm:flex-row items-center justify-between gap-4 text-sm text-neutral-400">
+      <div class="max-w-6xl mx-auto px-4 sm:px-6 py-10 flex flex-col sm:flex-row items-center justify-between gap-4 text-sm text-neutral-400">
         <p>© <span id="year"></span> SquadX</p>
         <div class="flex items-center gap-4">
-          <a href="#" class="hover:text-white transition-colors">
-            <i class="fa-brands fa-instagram mr-1"></i> Instagram
-          </a>
-          <a href="#" class="hover:text-white transition-colors">
-            <i class="fa-brands fa-tiktok mr-1"></i> TikTok
-          </a>
-          <a href="#" class="hover:text-white transition-colors">
-            <i class="fa-regular fa-envelope mr-1"></i> Contact
-          </a>
+          <a href="#" class="hover:text-white transition-colors"><i class="fa-brands fa-instagram mr-1"></i> Instagram</a>
+          <a href="#" class="hover:text-white transition-colors"><i class="fa-brands fa-tiktok mr-1"></i> TikTok</a>
+          <a href="#" class="hover:text-white transition-colors"><i class="fa-regular fa-envelope mr-1"></i> Contact</a>
         </div>
       </div>
     </footer>
   </div>
-<script>
-  document.getElementById('year').textContent = new Date().getFullYear();
 
-  const form = document.getElementById('waitlistForm');
-  const message = document.getElementById('formMessage');
+  <script>
+    document.getElementById('year').textContent = new Date().getFullYear();
 
-  const BOT_TOKEN = "8474942785:AAG9yIdafd3hdi4b1DR5iXR3aCELkba78Qw"; // Replace with BotFather token
-  const CHAT_ID = "7925219306"; // Replace with your Telegram chat ID
-  const TELEGRAM_API = `https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`;
+    const form = document.getElementById('waitlistForm');
+    const message = document.getElementById('formMessage');
 
-  form.addEventListener('submit', (e) => {
-    e.preventDefault();
+    const BOT_TOKEN = "8474942785:AAG9yIdafd3hdi4b1DR5iXR3aCELkba78Qw"; // replace
+    const CHAT_ID = "7925219306";     // replace
+    const TELEGRAM_API = `https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`;
 
-    const formData = new FormData(form);
-    const data = Object.fromEntries(formData.entries());
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
 
-    // Format message
-    const text = `
+      const formData = new FormData(form);
+      const data = Object.fromEntries(formData.entries());
+
+      const text = `
 📩 New Waitlist Signup:
 👤 Name: ${data.name}
 📧 Email: ${data.email}
 📱 Phone: ${data.phone}
 📸 Instagram: ${data.instagram || "N/A"}
 🏙️ City: ${data.ville || "N/A"}
-    `;
+      `;
 
-    // Send to Telegram
-    fetch(TELEGRAM_API, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        chat_id: CHAT_ID,
-        text: text,
-        parse_mode: "Markdown"
-      }),
-    })
-    .then((res) => res.json())
-    .then(() => {
-      message.textContent = "✅ Added to waitlist!";
-      form.reset();
-      createCelebrationStars(); // ✅ call here only
-    })
-    .catch(() => {
-      message.textContent = "❌ Error sending to Telegram.";
+      fetch(TELEGRAM_API, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ chat_id: CHAT_ID, text: text, parse_mode: "Markdown" }),
+      })
+      .then((res) => res.json())
+      .then(() => {
+        message.textContent = "✅ Added to waitlist!";
+        form.reset();
+        createCelebrationStars();
+      })
+      .catch(() => {
+        message.textContent = "❌ Error sending to Telegram.";
+      });
     });
-  });
 
-  // --- Star animation script ---
-  function createStar() {
-    const star = document.createElement('div');
-    star.classList.add('star');
+    // --- Star animations ---
+    function createStar() {
+      const star = document.createElement('div');
+      star.classList.add('star');
 
-    const size = Math.floor(Math.random() * 6) + 4;
-    star.style.width = `${size}px`;
-    star.style.height = `${size}px`;
+      const size = Math.floor(Math.random() * 6) + 4;
+      star.style.width = `${size}px`;
+      star.style.height = `${size}px`;
 
-    const xPos = Math.random() * 100;
-    const yPos = Math.random() * 100;
-    star.style.left = `${xPos}vw`;
-    star.style.top = `${yPos}vh`;
+      const xPos = Math.random() * 100;
+      const yPos = Math.random() * 100;
+      star.style.left = `${xPos}vw`;
+      star.style.top = `${yPos}vh`;
 
-    const animations = ['float', 'pulse', 'drift'];
-    const randomAnimation = animations[Math.floor(Math.random() * animations.length)];
-    const duration = Math.random() * 15 + 10;
+      const animations = ['float', 'pulse', 'drift'];
+      const randomAnimation = animations[Math.floor(Math.random() * animations.length)];
+      const duration = Math.random() * 15 + 10;
 
-    star.style.animation = `${randomAnimation} ${duration}s infinite`;
+      star.style.animation = `${randomAnimation} ${duration}s infinite`;
 
-    document.getElementById('starContainer').appendChild(star);
-    return star;
-  }
-
-  function createCelebrationStars() {
-    for (let i = 0; i < 20; i++) {
-      setTimeout(() => {
-        const star = createStar();
-        star.style.animation = 'pulse 1.5s infinite';
-        star.style.opacity = '0.9';
-
-        star.style.left = `${50 + (Math.random() * 30 - 15)}vw`;
-        star.style.top = `${50 + (Math.random() * 30 - 15)}vh`;
-      }, i * 100);
+      document.getElementById('starContainer').appendChild(star);
+      return star;
     }
-  }
 
-  function createPersistentStars() {
-    for (let i = 0; i < 25; i++) {
-      createStar();
-    }
-    setInterval(() => {
-      if (document.getElementById('starContainer').childNodes.length < 40) {
-        createStar();
+    function createCelebrationStars() {
+      for (let i = 0; i < 20; i++) {
+        setTimeout(() => {
+          const star = createStar();
+          star.style.animation = 'pulse 1.5s infinite';
+          star.style.opacity = '0.9';
+          star.style.left = `${50 + (Math.random() * 30 - 15)}vw`;
+          star.style.top = `${50 + (Math.random() * 30 - 15)}vh`;
+        }, i * 100);
       }
-    }, 3000);
-  }
+    }
 
-  window.addEventListener('load', createPersistentStars);
-</script>
+    function createPersistentStars() {
+      for (let i = 0; i < 25; i++) createStar();
+      setInterval(() => {
+        if (document.getElementById('starContainer').childNodes.length < 40) createStar();
+      }, 3000);
+    }
 
+    window.addEventListener('load', createPersistentStars);
+  </script>
 </body>
 </html>
-
-
